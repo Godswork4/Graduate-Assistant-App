@@ -128,7 +128,8 @@ class _CareerGuideScreenState extends State<CareerGuideScreen> {
                 ),
                 const SizedBox(width: 8),
                 IconButton(
-                  icon: Icon(Icons.send, color: deepPurple),
+                  icon: Image.asset('assets/pages_assets/sender.png',
+                      color: deepPurple),
                   onPressed: _sendMessage,
                 ),
               ],
