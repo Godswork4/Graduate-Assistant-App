@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'screens/post_screen.dart';
 import 'screens/skill_screen.dart';
 import 'screens/preloader_screen_1.dart';
 import 'screens/preloader_screen_2.dart';
@@ -16,6 +17,9 @@ import 'screens/resume_builder_screen.dart';
 import 'screens/updates_screen.dart';
 import 'screens/user_screen.dart';
 import 'services/supabase_service.dart';
+import 'screens/job_screen.dart';
+import 'screens/masters_screen.dart';
+import 'screens/career_guide_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,14 +71,15 @@ class NewlyGraduateHub extends StatelessWidget {
         '/register': (context) => const RegisterScreen(),
         '/home': (context) => const HomeScreen(),
         '/customer-care': (context) => const CustomerCareScreen(),
+        '/career-guide': (context) => const CareerGuideScreen(),
         '/messages': (context) => const MessagesScreen(),
         '/resume-builder': (context) => const ResumeBuilderScreen(),
         '/updates': (context) => const UpdatesScreen(),
-        '/skills': (context) => const SkillsScreen(),
-        '/jobs': (context) => const JobsScreen(),
+        '/skills': (context) => const SkillScreen(),
+        '/jobs': (context) => const JobScreen(),
         '/skill-progress': (context) => const SkillProgressScreen(),
         '/tasks': (context) => const TasksScreen(),
-        '/masters-update': (context) => const MastersUpdateScreen(),
+        '/masters-update': (context) => MastersScreen(),
         '/me': (context) => const UserScreen(),
         '/post': (context) => const PostScreen(),
       },
@@ -282,7 +287,11 @@ class HomeScreen extends StatelessWidget {
                     child: _buildGridItem(
                         'assets/pages_items/job.png', 'Job Offer'),
                   ),
-                  _buildArrowItem(),
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, '/career-guide'),
+                    child: _buildGridItem(
+                        'assets/pages_items/career_guide.png', 'Career Guide'),
+                  ),
                 ],
               ),
             ),
@@ -350,7 +359,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   ListTile(
                     leading:
-                        const Icon(Icons.info_outline, color: Colors.orange),
+                        const Icon(Icons.open_in_new, color: Colors.orange),
                     title: Text('NYSC Requirements',
                         style:
                             GoogleFonts.poppins(fontWeight: FontWeight.w600)),
@@ -451,17 +460,6 @@ class SkillsScreen extends StatelessWidget {
   }
 }
 
-class JobsScreen extends StatelessWidget {
-  const JobsScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Jobs', style: GoogleFonts.poppins())),
-      body: Center(child: Text('Jobs Screen', style: GoogleFonts.poppins())),
-    );
-  }
-}
-
 class SkillProgressScreen extends StatelessWidget {
   const SkillProgressScreen({super.key});
   @override
@@ -482,30 +480,6 @@ class TasksScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Tasks', style: GoogleFonts.poppins())),
       body: Center(child: Text('Tasks Screen', style: GoogleFonts.poppins())),
-    );
-  }
-}
-
-class MastersUpdateScreen extends StatelessWidget {
-  const MastersUpdateScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar:
-          AppBar(title: Text('Masters Update', style: GoogleFonts.poppins())),
-      body: Center(
-          child: Text('Masters Update Screen', style: GoogleFonts.poppins())),
-    );
-  }
-}
-
-class PostScreen extends StatelessWidget {
-  const PostScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Post', style: GoogleFonts.poppins())),
-      body: Center(child: Text('Post Screen', style: GoogleFonts.poppins())),
     );
   }
 }

@@ -20,7 +20,11 @@ class NotificationsScreen extends StatelessWidget {
         children: [
           Card(
             child: ListTile(
-              leading: Icon(Icons.notifications, color: deepPurple),
+              leading: Image.asset(
+                'assets/pages_assets/ChevronLeftOutline.png',
+                width: 24,
+                height: 24,
+              ),
               title: Text('Welcome to Graduate Guide!',
                   style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
               subtitle: Text('Your account was created successfully.',

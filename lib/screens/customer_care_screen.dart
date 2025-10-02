@@ -42,7 +42,7 @@ class _CustomerCareScreenState extends State<CustomerCareScreen> {
       path: 'support@newlygraduate.com',
       query: 'subject=Customer Support Request',
     );
-    
+
     if (await canLaunchUrl(emailUri)) {
       await launchUrl(emailUri);
     }
@@ -53,7 +53,7 @@ class _CustomerCareScreenState extends State<CustomerCareScreen> {
       scheme: 'tel',
       path: '+234 XXX XXX XXXX',
     );
-    
+
     if (await canLaunchUrl(phoneUri)) {
       await launchUrl(phoneUri);
     }
@@ -64,7 +64,8 @@ class _CustomerCareScreenState extends State<CustomerCareScreen> {
       // TODO: Implement form submission
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Your message has been sent! We\'ll get back to you soon.'),
+          content:
+              Text('Your message has been sent! We\'ll get back to you soon.'),
           backgroundColor: Colors.green,
         ),
       );
@@ -116,7 +117,10 @@ class _CustomerCareScreenState extends State<CustomerCareScreen> {
                   ),
                 ),
               ),
-            ).animate().fadeIn(duration: 800.ms).scale(begin: const Offset(0.8, 0.8)),
+            )
+                .animate()
+                .fadeIn(duration: 800.ms)
+                .scale(begin: const Offset(0.8, 0.8)),
 
             const SizedBox(height: 24),
 
@@ -258,7 +262,8 @@ class _CustomerCareScreenState extends State<CustomerCareScreen> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
                         }
-                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                        if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                            .hasMatch(value)) {
                           return 'Please enter a valid email';
                         }
                         return null;

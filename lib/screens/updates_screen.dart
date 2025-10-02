@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'post_screen.dart';
 
 class UpdatesScreen extends StatefulWidget {
   const UpdatesScreen({super.key});
@@ -114,10 +115,9 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                       IconButton(
                         icon: Image.asset(
                             'assets/pages_assets/Speakerphone.png',
-                            width: 8,
-                            height: 8),
-                        onPressed: () =>
-                            Navigator.pushNamed(context, '/updates'),
+                            width: 22,
+                            height: 22),
+                        onPressed: () => Navigator.pushNamed(context, '/post'),
                       )
                     ],
                   ),

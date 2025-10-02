@@ -32,6 +32,24 @@ class _SkillScreenState extends State<SkillScreen> {
           'Learn Graphic Design from scratch both online and onsite and kickstart your tech career',
       'duration': '6 Weeks',
       'mode': 'Online & Onsite',
+      'tab': 'General',
+    },
+    {
+      'img': 'assets/pages_assets/skill3.png',
+      'title': 'Interior Decoration',
+      'desc':
+          'Learn Interior Design from scratch both online and onsite and kickstart your tech career',
+      'duration': '15 Weeks',
+      'mode': 'Online & Onsite',
+      'tab': 'General',
+    },
+    {
+      'img': 'assets/pages_assets/skill2.png',
+      'title': 'Graphic Design',
+      'desc':
+          'Learn Graphic Design from scratch both online and onsite and kickstart your tech career',
+      'duration': '6 Weeks',
+      'mode': 'Online & Onsite',
       'tab': 'Udemy',
     },
     {
@@ -79,11 +97,15 @@ class _SkillScreenState extends State<SkillScreen> {
                   children: [
                     CircleAvatar(
                       radius: 22,
-                      backgroundImage: AssetImage(
-                          'assets/preloader_assets/charco_education.png'),
+                      backgroundImage:
+                          AssetImage('assets/pages_assets/avatar.png'),
                     ),
-                    Image.asset('assets/pages_assets/Bell.png',
-                        width: 28, height: 28),
+                    GestureDetector(
+                      onTap: () => Navigator.pushReplacementNamed(
+                          context, '/notifications'),
+                      child: Image.asset('assets/pages_assets/Bell.png',
+                          width: 28, height: 28),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 18),

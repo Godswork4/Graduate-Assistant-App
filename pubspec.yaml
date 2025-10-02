@@ -34,6 +34,7 @@ flutter:
     - assets/preloader_assets/happy_bunch_chat.png
     - assets/preloader_assets/ola_playing_video_games.png
     - assets/pages_items/register.png
+    - assets/pages_items/career_guide.png
     - assets/pages_items/register_gradient.png
     - assets/pages_items/nysc_logo.png
     - assets/pages_items/resume.png
