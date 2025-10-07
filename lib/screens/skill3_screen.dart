@@ -10,23 +10,36 @@ class Skill3Screen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          // Top image
-          SizedBox(
-            width: double.infinity,
-            height: 375,
-            child: Image.asset(
-              'assets/pages_assets/skill3.png',
-              fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(37),
+                    bottomRight: Radius.circular(37),
+                  ),
+                  child: Image.asset(
+                    'assets/pages_assets/skill3.png',
+                    width: double.infinity,
+                    height: 260,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Positioned(
+                  top: 40,
+                  left: 16,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios_new,
+                        color: Colors.black, size: 28),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ],
             ),
-          ),
-          // Main content
-          Positioned(
-            top: 323,
-            left: 0,
-            right: 0,
-            child: Container(
+            Container(
+              width: double.infinity,
               decoration: BoxDecoration(
                 color: const Color(0xFFFBF8FF),
                 borderRadius:
@@ -197,18 +210,8 @@ class Skill3Screen extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-          // Back button
-          Positioned(
-            top: 40,
-            left: 16,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new,
-                  color: Colors.black, size: 28),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

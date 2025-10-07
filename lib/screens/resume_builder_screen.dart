@@ -8,7 +8,7 @@ class ResumeBuilderScreen extends StatelessWidget {
   final Color deepPurple = const Color(0xFF6C2786);
 
   Future<void> _openResumeSite(BuildContext context) async {
-    final uri = Uri.parse('https://www.canva.com/create/resumes/');
+    final uri = Uri.parse('https://app.flowcv.com/resume/content');
     final leave = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(

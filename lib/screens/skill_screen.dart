@@ -232,41 +232,55 @@ class _SkillScreenState extends State<SkillScreen> {
 
   Widget _buildSkillCard(
       String img, String title, String desc, String duration, String mode) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-      color: const Color(0xFFF8F6FF),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(img, width: 80, height: 80, fit: BoxFit.cover),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold, fontSize: 16)),
-                  const SizedBox(height: 4),
-                  Text(desc,
-                      style: GoogleFonts.poppins(
-                          fontSize: 13, color: Colors.grey[700])),
-                  const SizedBox(height: 8),
-                  Text('Duration : $duration',
-                      style: GoogleFonts.poppins(
-                          fontSize: 13, fontWeight: FontWeight.w500)),
-                  Text('Mode: $mode',
-                      style: GoogleFonts.poppins(
-                          fontSize: 13, fontWeight: FontWeight.w500)),
-                ],
+    return InkWell(
+      borderRadius: BorderRadius.circular(18),
+      onTap: () {
+        if (title == 'Front End Dev.') {
+          Navigator.pushNamed(context, '/skill1');
+        } else if (title == 'Graphic Design') {
+          Navigator.pushNamed(context, '/skill2');
+        } else if (title == 'Interior Decoration') {
+          Navigator.pushNamed(context, '/skill3');
+        }
+        // Add more navigation for other skills if needed
+      },
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        color: const Color(0xFFF8F6FF),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child:
+                    Image.asset(img, width: 80, height: 80, fit: BoxFit.cover),
               ),
-            ),
-          ],
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title,
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.bold, fontSize: 16)),
+                    const SizedBox(height: 4),
+                    Text(desc,
+                        style: GoogleFonts.poppins(
+                            fontSize: 13, color: Colors.grey[700])),
+                    const SizedBox(height: 8),
+                    Text('Duration : $duration',
+                        style: GoogleFonts.poppins(
+                            fontSize: 13, fontWeight: FontWeight.w500)),
+                    Text('Mode: $mode',
+                        style: GoogleFonts.poppins(
+                            fontSize: 13, fontWeight: FontWeight.w500)),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

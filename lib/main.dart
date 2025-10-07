@@ -3,6 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'screens/post_screen.dart';
 import 'screens/skill_screen.dart';
+import 'screens/skill1_screen.dart';
+import 'screens/skill2_screen.dart';
+import 'screens/skill3_screen.dart';
+
 import 'screens/preloader_screen_1.dart';
 import 'screens/preloader_screen_2.dart';
 import 'screens/preloader_screen_3.dart';
@@ -76,6 +80,9 @@ class NewlyGraduateHub extends StatelessWidget {
         '/resume-builder': (context) => const ResumeBuilderScreen(),
         '/updates': (context) => const UpdatesScreen(),
         '/skills': (context) => const SkillScreen(),
+        '/skill1': (context) => const Skill1Screen(),
+        '/skill2': (context) => const Skill2Screen(),
+        '/skill3': (context) => const Skill3Screen(),
         '/jobs': (context) => const JobScreen(),
         '/skill-progress': (context) => const SkillProgressScreen(),
         '/tasks': (context) => const TasksScreen(),
