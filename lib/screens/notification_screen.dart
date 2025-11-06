@@ -20,15 +20,20 @@ class NotificationsScreen extends StatelessWidget {
         children: [
           Card(
             child: ListTile(
-              leading: Image.asset(
-                'assets/pages_assets/ChevronLeftOutline.png',
-                width: 24,
-                height: 24,
-              ),
+              leading: Icon(Icons.check_circle_outline, color: deepPurple),
               title: Text('Welcome to Graduate Guide!',
                   style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
               subtitle: Text('Your account was created successfully.',
                   style: GoogleFonts.poppins()),
+              onTap: () => Navigator.pushNamed(
+                context,
+                '/news-detail',
+                arguments: {
+                  'title': 'Welcome to Graduate Guide!',
+                  'body': 'Your account was created successfully. Explore features like Resume Builder, Jobs, Skills and more.',
+                  'date': 'Today',
+                },
+              ),
             ),
           ),
           Card(
@@ -39,6 +44,16 @@ class NotificationsScreen extends StatelessWidget {
               subtitle: Text(
                   'Lautech Student Emerge as the best in the FMN Competition.',
                   style: GoogleFonts.poppins()),
+              onTap: () => Navigator.pushNamed(
+                context,
+                '/news-detail',
+                arguments: {
+                  'title': 'Campus News Update',
+                  'body': 'Lautech student emerges as the best in the FMN Competition. Congratulations to the team!',
+                  'imageAsset': 'assets/pages_items/fmn_logo.png',
+                  'date': 'Today',
+                },
+              ),
             ),
           ),
           Card(

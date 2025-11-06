@@ -33,8 +33,11 @@ class Skill1Screen extends StatelessWidget {
                   top: 40,
                   left: 16,
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new,
-                        color: Colors.black, size: 28),
+                    icon: Image.asset(
+                        "assets/pages_assets/ChevronLeftOutline.png",
+                        color: Colors.black,
+                        width: 24,
+                        height: 24),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),

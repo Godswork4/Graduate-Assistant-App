@@ -85,7 +85,8 @@ class _CustomerCareScreenState extends State<CustomerCareScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Image.asset("assets/pages_assets/ChevronLeftOutline.png",
+              color: Colors.black, width: 24, height: 24),
           onPressed: () => Navigator.pop(context),
         ),
       ),

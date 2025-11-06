@@ -95,13 +95,13 @@ class NyscGuidelinesScreen extends StatelessWidget {
               onTap: () => _openExternal(context, 'https://www.nysc.gov.ng/'),
             ),
             ListTile(
-              leading: const Icon(Icons.school, color: deepPurple),
+              leading: Icon(Icons.school, color: deepPurple),
               title: Text('NYSC Orientation Camp Tips',
                   style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
               subtitle: Text(
                   'Read tips and advice for a successful camp experience.',
                   style: GoogleFonts.poppins(fontSize: 13)),
-              trailing: const Icon(Icons.open_in_new, color: deepPurple),
+              trailing: Icon(Icons.open_in_new, color: deepPurple),
               onTap: () => _openExternal(
                   context, 'https://www.nysc.gov.ng/orientation-camp.html'),
             ),

@@ -182,6 +182,10 @@ image_picker_windows
 2.19
 file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/image_picker_windows-0.2.1+1/
 file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/image_picker_windows-0.2.1+1/lib/
+json_annotation
+3.0
+file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/json_annotation-4.9.0/
+file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/json_annotation-4.9.0/lib/
 jwt_decode
 2.12
 file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/jwt_decode-0.3.1/
@@ -274,6 +278,10 @@ plugin_platform_interface
 3.0
 file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8/
 file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/plugin_platform_interface-2.1.8/lib/
+pocketbase
+3.0
+file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/pocketbase-0.18.1/
+file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/pocketbase-0.18.1/lib/
 posix
 3.0
 file:///C:/Users/DELL/AppData/Local/Pub/Cache/hosted/pub.dev/posix-6.0.3/

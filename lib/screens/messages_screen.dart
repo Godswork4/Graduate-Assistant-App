@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:newly_graduate_hub/services/backend.dart';
+import 'package:newly_graduate_hub/config.dart' as app_config;
 
 class MessagesScreen extends StatefulWidget {
   const MessagesScreen({super.key});
@@ -9,20 +11,38 @@ class MessagesScreen extends StatefulWidget {
 }
 
 class _MessagesScreenState extends State<MessagesScreen> {
+  String? _toUserId;
+  String? _toLabel;
   final TextEditingController _controller = TextEditingController();
   final Color deepPurple = const Color(0xFF6C2786);
-  final List<Map<String, dynamic>> messages = [
-    {
-      'text':
-          "Hi I'm Seeking for job in your Organization, all the requirement for the job is available and i'm capable of handling thr role. sending this is to request for the link to apply for the post. thank you.",
-      'isMe': false,
-    },
-    {
-      'text':
-          "Hi, we are currently on the look out for motion graphics designer, please send your cv if you are skiiled in, thank you.",
-      'isMe': true,
-    },
-  ];
+  List<Map<String, dynamic>> messages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMessages();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is Map) {
+      _toUserId = args['toUserId'] as String?;
+      _toLabel = args['toLabel'] as String?;
+      setState(() {});
+    }
+  }
+
+  Future<void> _loadMessages() async {
+    try {
+      final data = await Backend.instance.fetchMessages();
+      setState(() => messages = data.map((m) => {
+        'text': (m['content'] ?? '').toString(),
+        'isMe': m['from'] == Backend.instance.getCurrentUser()?.id,
+      }).toList().reversed.toList());
+    } catch (_) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +58,29 @@ class _MessagesScreenState extends State<MessagesScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
-        title: Text(
-          'Messages',
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-          ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Messages',
+              style: GoogleFonts.poppins(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
+            ),
+            if (_toLabel != null || app_config.supportUserId != null)
+              Text(
+                'To: ' + (_toLabel ?? 'Support'),
+                style: GoogleFonts.poppins(fontSize: 11, color: Colors.grey[700]),
+              ),
+          ],
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.people_outline, color: Colors.black87),
+            onPressed: () => Navigator.pushNamed(context, '/conversations'),
+          ),
           Padding(
             padding: const EdgeInsets.only(right: 16),
             child: Image.asset('assets/pages_items/Bell.png',
@@ -168,12 +202,13 @@ class _MessagesScreenState extends State<MessagesScreen> {
             ),
             const SizedBox(width: 8),
             GestureDetector(
-              onTap: () {
-                if (_controller.text.trim().isEmpty) return;
-                setState(() {
-                  messages.add({'text': _controller.text.trim(), 'isMe': true});
-                  _controller.clear();
-                });
+              onTap: () async {
+                final me = Backend.instance.getCurrentUser();
+                if (_controller.text.trim().isEmpty || me == null) return;
+                final toId = _toUserId ?? app_config.supportUserId ?? me.id;
+                await Backend.instance.sendMessage(toUserId: toId, content: _controller.text.trim());
+                _controller.clear();
+                await _loadMessages();
               },
               child: Image.asset('assets/pages_assets/sender.png',
                   width: 24, height: 24),

@@ -20,14 +20,19 @@ import 'screens/messages_screen.dart';
 import 'screens/resume_builder_screen.dart';
 import 'screens/updates_screen.dart';
 import 'screens/user_screen.dart';
-import 'services/supabase_service.dart';
+import 'services/backend.dart';
 import 'screens/job_screen.dart';
 import 'screens/masters_screen.dart';
 import 'screens/career_guide_screen.dart';
+import 'screens/notification_screen.dart';
+import 'screens/support_screen.dart';
+import 'screens/quick_links_screen.dart';
+import 'screens/news_detail_screen.dart';
+import 'screens/conversations_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SupabaseService().initialize();
+  await Backend.instance.initialize();
   runApp(const NewlyGraduateHub());
 }
 
@@ -89,6 +94,12 @@ class NewlyGraduateHub extends StatelessWidget {
         '/masters-update': (context) => MastersScreen(),
         '/me': (context) => const UserScreen(),
         '/post': (context) => const PostScreen(),
+        '/notifications': (context) => const NotificationsScreen(),
+        // Support icon opens dedicated Support screen
+        '/support': (context) => const SupportScreen(),
+        '/quick-links': (context) => const QuickLinksScreen(),
+        '/news-detail': (context) => const NewsDetailScreen(),
+        '/conversations': (context) => const ConversationsScreen(),
       },
     );
   }
@@ -228,18 +239,24 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                       const Spacer(),
-                      Image.asset(
-                        'assets/pages_assets/support.png',
-                        width: 28,
-                        height: 28,
-                        fit: BoxFit.contain,
+                      GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, '/support'),
+                        child: Image.asset(
+                          'assets/pages_assets/support.png',
+                          width: 28,
+                          height: 28,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                       const SizedBox(width: 16),
-                      Image.asset(
-                        'assets/pages_items/Bell.png',
-                        width: 28,
-                        height: 28,
-                        fit: BoxFit.contain,
+                      GestureDetector(
+                        onTap: () => Navigator.pushNamed(context, '/notifications'),
+                        child: Image.asset(
+                          'assets/pages_items/Bell.png',
+                          width: 28,
+                          height: 28,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ],
                   ),
@@ -314,7 +331,7 @@ class HomeScreen extends StatelessWidget {
                           color: deepPurple)),
                   const Spacer(),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () => Navigator.pushNamed(context, '/updates'),
                     child: Text('See all >',
                         style: GoogleFonts.poppins(color: deepPurple)),
                   ),
@@ -323,20 +340,58 @@ class HomeScreen extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                child: ListTile(
-                  leading: Image.asset('assets/pages_items/fmn_logo.png',
-                      width: 48, height: 48, fit: BoxFit.contain),
-                  title: Text(
-                      'Lautech Student Emerge as the best in the FMN Competition',
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w500, fontSize: 14)),
-                  subtitle: Text('Posted 30 min ago',
-                      style: GoogleFonts.poppins(
-                          fontSize: 12, color: Colors.grey[600])),
-                ),
+              child: Column(
+                children: [
+                  Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    child: ListTile(
+                      leading: Image.asset('assets/pages_items/fmn_logo.png',
+                          width: 48, height: 48, fit: BoxFit.contain),
+                      title: Text(
+                          'Lautech Student Emerge as the best in the FMN Competition',
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w500, fontSize: 14)),
+                      subtitle: Text('Posted 30 min ago',
+                          style: GoogleFonts.poppins(
+                              fontSize: 12, color: Colors.grey[600])),
+onTap: () => Navigator.pushNamed(
+                        context,
+                        '/news-detail',
+                        arguments: {
+                          'title': 'Lautech Student Emerge as the best in the FMN Competition',
+                          'body': 'A student from LAUTECH has emerged as the best in the FMN competition. Read more about the award, criteria, and highlights from the event.',
+                          'imageAsset': 'assets/pages_items/fmn_logo.png',
+                          'date': '30 min ago',
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    child: ListTile(
+                      leading: Icon(Icons.school, color: deepPurple),
+                      title: Text(
+                          'New Scholarship Opportunities Announced',
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w500, fontSize: 14)),
+                      subtitle: Text('Posted 1 hr ago',
+                          style: GoogleFonts.poppins(
+                              fontSize: 12, color: Colors.grey[600])),
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        '/news-detail',
+                        arguments: {
+                          'title': 'New Scholarship Opportunities Announced',
+                          'body': 'Multiple new scholarship opportunities are now open for application. Learn about eligibility, timelines, and how to apply.',
+                          'date': '1 hr ago',
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 24),
@@ -345,11 +400,21 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('NYSC Quick Links',
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: deepPurple)),
+                  Row(
+                    children: [
+                      Text('NYSC Quick Links',
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: deepPurple)),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () => Navigator.pushNamed(context, '/quick-links'),
+                        child: Text('See all >',
+                            style: GoogleFonts.poppins(color: deepPurple)),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 12),
                   ListTile(
                     leading: Image.asset('assets/pages_items/nysc_logo.png',

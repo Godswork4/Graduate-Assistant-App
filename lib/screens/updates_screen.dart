@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'post_screen.dart';
+import 'package:newly_graduate_hub/services/backend.dart';
 
 class UpdatesScreen extends StatefulWidget {
   const UpdatesScreen({super.key});
@@ -12,53 +13,23 @@ class UpdatesScreen extends StatefulWidget {
 class _UpdatesScreenState extends State<UpdatesScreen> {
   final Color deepPurple = const Color(0xFF6C2786);
 
-  final List<Map<String, String>> updates = [
-    {
-      'title': 'Vacancy: Project Manager',
-      'company': 'Becon Grace Limited',
-      'location': 'Abuja, Onsite',
-      'experience': '3 years',
-      'mode':
-          'Send your cv to our email becongrace@gmail.com or send us a message via this App',
-      'active': 'true',
-    },
-    {
-      'title': 'Skill Aquisition: Web Development',
-      'company': 'Buggybillion',
-      'location': 'Ogbomoso, Oyo State, Onsite',
-      'requirement': 'A Good System and Strong Internet',
-      'how':
-          'Send us a message to us via this app to get the registration link.',
-      'active': 'true',
-    },
-    {
-      'title': 'Vacancy: Project Manager',
-      'company': 'Becon Grace Limited',
-      'location': 'Abuja, Onsite',
-      'experience': '3 years',
-      'mode':
-          'Send your cv to our email becongrace@gmail.com or send us a message via this App',
-      'active': 'true',
-    },
-    {
-      'title': 'Vacancy: Project Manager',
-      'company': 'Becon Grace Limited',
-      'location': 'Abuja, Onsite',
-      'experience': '3 years',
-      'mode':
-          'Send your cv to our email becongrace@gmail.com or send us a message via this App',
-      'active': 'true',
-    },
-    {
-      'title': 'Vacancy: Project Manager',
-      'company': 'Becon Grace Limited',
-      'location': 'Abuja, Onsite',
-      'experience': '3 years',
-      'mode':
-          'Send your cv to our email becongrace@gmail.com or send us a message via this App',
-      'active': 'false',
-    },
-  ];
+  bool _loading = true;
+  List<Map<String, dynamic>> _posts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPosts();
+  }
+
+  Future<void> _loadPosts() async {
+    try {
+      _posts = await Backend.instance.fetchPosts();
+    } catch (_) {
+      _posts = [];
+    }
+    if (mounted) setState(() => _loading = false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +57,11 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: Image.asset('assets/pages_assets/Bell.png',
-                  width: 26, height: 26),
+              child: GestureDetector(
+                onTap: () => Navigator.pushNamed(context, '/notifications'),
+                child: Image.asset('assets/pages_assets/Bell.png',
+                    width: 26, height: 26),
+              ),
             ),
           ],
         ),
@@ -126,13 +100,19 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
             ),
             const SizedBox(height: 8),
             Expanded(
-              child: ListView.builder(
-                itemCount: updates.length,
-                itemBuilder: (context, index) {
-                  final item = updates[index];
-                  return _buildUpdateCard(item, deepPurple, context);
-                },
-              ),
+              child: _loading
+                  ? const Center(child: CircularProgressIndicator())
+                  : (_posts.isEmpty
+                      ? Center(
+                          child: Text('No updates yet', style: GoogleFonts.poppins()),
+                        )
+                      : ListView.builder(
+                          itemCount: _posts.length,
+                          itemBuilder: (context, index) {
+                            final item = _posts[index];
+                            return _buildPostCard(item, deepPurple, context);
+                          },
+                        )),
             ),
           ],
         ),
@@ -141,92 +121,84 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
     );
   }
 
-  Widget _buildUpdateCard(
-      Map<String, String> item, Color deepPurple, BuildContext context) {
-    final bool isActive = item['active'] == 'true';
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-          color: isActive ? deepPurple : Colors.grey.shade300,
-          width: 2,
-        ),
-        borderRadius: BorderRadius.circular(16),
+  Widget _buildPostCard(
+      Map<String, dynamic> item, Color deepPurple, BuildContext context) {
+    String composeBody(Map<String, dynamic> it) {
+      final parts = <String>[];
+      if (it['company'] != null) parts.add('Company: ${it['company']}');
+      if (it['location'] != null) parts.add('Location: ${it['location']}');
+      if (it['experience'] != null) parts.add('Experience: ${it['experience']}');
+      if (it['requirement'] != null) parts.add('Requirement: ${it['requirement']}');
+      if (it['how'] != null) parts.add('How to Register: ${it['how']}');
+      if (it['mode'] != null) parts.add('Mode of Application: ${it['mode']}');
+      return parts.join('\n');
+    }
+    final bool isActive = true;
+    return InkWell(
+      onTap: () => Navigator.pushNamed(
+        context,
+        '/news-detail',
+        arguments: {
+          'title': (item['title'] ?? 'Update').toString(),
+          'body': (item['body'] ?? composeBody(item)).toString(),
+          'imageAsset': item['imageUrl'],
+          'date': (item['date'] ?? '').toString(),
+        },
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            item['title'] ?? '',
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: isActive ? deepPurple : Colors.grey,
-            ),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(
+            color: isActive ? deepPurple : Colors.grey.shade300,
+            width: 2,
           ),
-          if (item.containsKey('company'))
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Text(
-              'Company: ${item['company']}',
-              style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[800]),
-            ),
-          if (item.containsKey('location'))
-            Text(
-              'Location: ${item['location']}',
-              style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[800]),
-            ),
-          if (item.containsKey('experience'))
-            Text(
-              'Experience: ${item['experience']}',
-              style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[800]),
-            ),
-          if (item.containsKey('requirement'))
-            Text(
-              'Requirement: ${item['requirement']}',
-              style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[800]),
-            ),
-          if (item.containsKey('how'))
-            Text(
-              'How to Register: ${item['how']}',
-              style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[800]),
-            ),
-          if (item.containsKey('mode'))
-            Text(
-              'Mode of Application: ${item['mode']}',
-              style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[800]),
-            ),
-          const SizedBox(height: 10),
-          Align(
-            alignment: Alignment.centerRight,
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isActive ? deepPurple : Colors.grey.shade300,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                elevation: 0,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+              (item['title'] ?? '').toString(),
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: isActive ? deepPurple : Colors.grey,
               ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/messages_screen');
-              },
-              icon: const Icon(Icons.message, color: Colors.white, size: 18),
-              label: Text(
-                'Message',
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
+            ),
+            if (item.containsKey('company'))
+              Text('Company: ${item['company']}', style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[800])),
+            if (item.containsKey('location'))
+              Text('Location: ${item['location']}', style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[800])),
+            if (item.containsKey('experience'))
+              Text('Experience: ${item['experience']}', style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[800])),
+            if (item.containsKey('requirement'))
+              Text('Requirement: ${item['requirement']}', style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[800])),
+            if (item.containsKey('how'))
+              Text('How to Register: ${item['how']}', style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[800])),
+            if (item.containsKey('mode'))
+              Text('Mode of Application: ${item['mode']}', style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey[800])),
+            const SizedBox(height: 10),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isActive ? deepPurple : Colors.grey.shade300,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
                 ),
+                onPressed: () => Navigator.pushNamed(context, '/messages'),
+                icon: const Icon(Icons.message, color: Colors.white, size: 18),
+                label: Text('Message', style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 14)),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
-
   Widget _buildBottomNavBar(BuildContext context, Color deepPurple) {
     return Container(
       decoration: BoxDecoration(color: Colors.white, boxShadow: [

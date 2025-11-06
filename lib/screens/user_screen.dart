@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:newly_graduate_hub/services/supabase_service.dart';
+import 'package:newly_graduate_hub/services/backend.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -25,12 +25,12 @@ class _UserScreenState extends State<UserScreen> {
       setState(() => _isUploading = true);
       final Uint8List data = await picked.readAsBytes();
 
-      final user = SupabaseService().getCurrentUser();
+      final user = Backend.instance.getCurrentUser();
       final String path = user != null
           ? 'avatars/${user.id}.png'
           : 'avatars/guest_${DateTime.now().millisecondsSinceEpoch}.png';
 
-      final String? publicUrl = await SupabaseService()
+      final String? publicUrl = await Backend.instance
           .uploadAvatarBytes(data, path, contentType: 'image/png');
       if (!mounted) return;
       setState(() {
@@ -39,7 +39,7 @@ class _UserScreenState extends State<UserScreen> {
       });
 
       if (user != null && publicUrl != null) {
-        await SupabaseService().updateProfileImage(user.id, publicUrl);
+        await Backend.instance.updateProfileImage(user.id, publicUrl);
       }
 
       ScaffoldMessenger.of(context).showSnackBar(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'post_screen.dart';
+import 'package:newly_graduate_hub/services/backend.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:typed_data';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -22,7 +24,21 @@ class _PostScreenState extends State<PostScreen> {
     'Other'
   ];
 
-  void _sendPost() {
+  Uint8List? _imageBytes;
+  String? _imageName;
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final XFile? file = await picker.pickImage(source: ImageSource.gallery, maxWidth: 1200);
+    if (file == null) return;
+    final bytes = await file.readAsBytes();
+    setState(() {
+      _imageBytes = bytes;
+      _imageName = file.name;
+    });
+  }
+
+  Future<void> _sendPost() async {
     if (_titleController.text.trim().isEmpty ||
         _descController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -33,16 +49,45 @@ class _PostScreenState extends State<PostScreen> {
       );
       return;
     }
-    // Here you would send the post to your backend or update state
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Post sent!', style: GoogleFonts.poppins()),
-        backgroundColor: deepPurple,
-      ),
-    );
-    _titleController.clear();
-    _descController.clear();
-    setState(() => _selectedLocation = null);
+    final body = _selectedLocation == null || _selectedLocation!.isEmpty
+        ? _descController.text.trim()
+        : '${_descController.text.trim()}\n\nLocation: ${_selectedLocation!}';
+    try {
+      final ok = await Backend.instance.createPost(
+        title: _titleController.text.trim(),
+        body: body,
+        imageBytes: _imageBytes,
+        imageName: _imageName ?? 'image.png',
+        contentType: 'image/png',
+      );
+      if (!mounted) return;
+      if (ok) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Post published', style: GoogleFonts.poppins()),
+            backgroundColor: deepPurple,
+          ),
+        );
+        _titleController.clear();
+        _descController.clear();
+        setState(() { _selectedLocation = null; _imageBytes = null; _imageName = null; });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to publish', style: GoogleFonts.poppins()),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e', style: GoogleFonts.poppins()),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -90,7 +135,27 @@ class _PostScreenState extends State<PostScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                ElevatedButton.icon(
+                  onPressed: _pickImage,
+                  icon: const Icon(Icons.image_outlined),
+                  label: Text('Add Image', style: GoogleFonts.poppins()),
+                ),
+                const SizedBox(width: 12),
+                if (_imageBytes != null)
+                  Text(_imageName ?? 'image', style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey[700])),
+              ],
+            ),
+            const SizedBox(height: 12),
+            if (_imageBytes != null) ...[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.memory(_imageBytes!, height: 140, fit: BoxFit.cover),
+              ),
+              const SizedBox(height: 16),
+            ],
             TextFormField(
               controller: _descController,
               maxLines: 4,
@@ -134,7 +199,7 @@ class _PostScreenState extends State<PostScreen> {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                onPressed: _sendPost,
+            onPressed: _sendPost,
                 child: Text(
                   'SEND',
                   style: GoogleFonts.poppins(

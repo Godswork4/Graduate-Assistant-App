@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:newly_graduate_hub/services/supabase_service.dart';
+import 'package:newly_graduate_hub/services/backend.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -608,7 +608,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ? _usernameController.text.trim()
         : '$surname ${_middleNameController.text.trim()}'.trim();
 
-    final ok = await SupabaseService().signUp(
+    final ok = await Backend.instance.signUp(
       email: _emailController.text.trim(),
       password: _passwordController.text,
       name: fullName,
@@ -634,7 +634,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Registration failed. Check Supabase config.',
+          content: Text('Registration failed. Please try again.',
               style: GoogleFonts.poppins(color: Colors.white)),
           backgroundColor: Colors.red,
         ),

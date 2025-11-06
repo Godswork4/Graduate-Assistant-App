@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:newly_graduate_hub/services/supabase_service.dart';
+import 'package:newly_graduate_hub/services/backend.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState?.validate() != true) return;
     setState(() => _isLoading = true);
 
-    final ok = await SupabaseService().signIn(
+    final ok = await Backend.instance.signIn(
       email: _emailController.text.trim(),
       password: _passwordController.text,
     );
