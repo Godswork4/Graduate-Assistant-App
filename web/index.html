@@ -61,8 +61,8 @@
   
   <script>
     window.addEventListener('load', function(ev) {
-      _flutter.loader.load({
-        // Disable service worker in dev to avoid caching/boot issues
+      // Use legacy API for max compatibility in dev, with SW disabled
+      _flutter.loader.loadEntrypoint({
         serviceWorker: null,
         onEntrypointLoaded: function(engineInitializer) {
           engineInitializer.initializeEngine().then(function(appRunner) {
